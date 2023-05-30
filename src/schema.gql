@@ -2,24 +2,78 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Friend {
+  id: ID!
+  receiver: User!
+  receiverId: Int!
+  sender: User!
+  senderId: Int!
+  status: FriendStatus!
+}
+
+type FriendAvgAggregate {
+  id: Float
+  receiverId: Float
+  senderId: Float
+}
+
+type FriendCountAggregate {
+  _all: Int!
+  id: Int!
+  receiverId: Int!
+  senderId: Int!
+  status: Int!
+}
+
+type FriendMaxAggregate {
+  id: Int
+  receiverId: Int
+  senderId: Int
+  status: FriendStatus
+}
+
+type FriendMinAggregate {
+  id: Int
+  receiverId: Int
+  senderId: Int
+  status: FriendStatus
+}
+
+enum FriendStatus {
+  ACCEPTED
+  BLOCKED
+  PENDING
+}
+
+type FriendSumAggregate {
+  id: Int
+  receiverId: Int
+  senderId: Int
+}
+
 type LogoutResponse {
   loggedOut: Boolean!
 }
 
 type Mutation {
-  getNewTokens: NewTokensResponse!
+  addFriend(receiverEmail: String!): Friend!
+  getNewTokens: SignResponse!
   logout(id: Int!): LogoutResponse!
+  removeFriend(id: Int!): Friend!
   signin(signInInput: SignInInput!): SignResponse!
   signup(signUpInput: SignUpInput!): SignResponse!
-}
-
-type NewTokensResponse {
-  accessToken: String!
-  refreshToken: String!
+  updateFriend(id: Int!, status: String!): Friend!
 }
 
 type Query {
+  friends: [Friend!]!
   hello: String!
+  user: User!
 }
 
 input SignInInput {
@@ -40,7 +94,52 @@ input SignUpInput {
 }
 
 type User {
+  createdAt: DateTime!
   email: String!
-  id: Float!
+  hashedPassword: String!
+  hashedRefreshToken: String
+  id: ID!
+  receiver: Friend
+  sender: Friend
+  updatedAt: DateTime!
   username: String!
+}
+
+type UserAvgAggregate {
+  id: Float
+}
+
+type UserCountAggregate {
+  _all: Int!
+  createdAt: Int!
+  email: Int!
+  hashedPassword: Int!
+  hashedRefreshToken: Int!
+  id: Int!
+  updatedAt: Int!
+  username: Int!
+}
+
+type UserMaxAggregate {
+  createdAt: DateTime
+  email: String
+  hashedPassword: String
+  hashedRefreshToken: String
+  id: Int
+  updatedAt: DateTime
+  username: String
+}
+
+type UserMinAggregate {
+  createdAt: DateTime
+  email: String
+  hashedPassword: String
+  hashedRefreshToken: String
+  id: Int
+  updatedAt: DateTime
+  username: String
+}
+
+type UserSumAggregate {
+  id: Int
 }

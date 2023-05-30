@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessTokenGuard } from './auth/guards/accessToken.guard';
+import { FriendsModule } from './friends/friends.module';
 
 @Module({
   imports: [
@@ -16,9 +17,11 @@ import { AccessTokenGuard } from './auth/guards/accessToken.guard';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
+      installSubscriptionHandlers: true,
     }),
     AuthModule,
     UserModule,
+    FriendsModule,
   ],
   controllers: [],
   providers: [

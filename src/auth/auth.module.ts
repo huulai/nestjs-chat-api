@@ -1,3 +1,4 @@
+import { UserService } from './../user/user.service';
 import { PrismaService } from './../prisma/prisma.service';
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -14,6 +15,7 @@ import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
     PrismaService,
     AccessTokenStrategy,
     RefreshTokenStrategy,
+    UserService,
   ],
 })
 export class AuthModule {}

@@ -1,6 +1,11 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { UserService } from './../user/user.service';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { SignUpInput } from './dto/signup.input';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as argon from 'argon2';
@@ -12,14 +17,21 @@ export class AuthService {
     private prisma: PrismaService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private userService: UserService,
   ) {}
 
   async signup(signUpInput: SignUpInput) {
     const { password, username, email } = signUpInput;
+
+    const isExistingUser = await this.userService.findOneByEmail(email);
+    if (isExistingUser) throw new ConflictException('User already exists');
+
     const hashedPassword = await argon.hash(password);
-    const user = await this.prisma.user.create({
-      data: { hashedPassword, username, email },
+    const user = await this.userService.create({
+      data: { email, hashedPassword, username },
     });
+
+    if (!user) throw new ForbiddenException('User creation failed');
 
     const { accessToken, refreshToken } = await this.createTokens(
       user.id,
@@ -35,7 +47,7 @@ export class AuthService {
       where: { email: signInInput.email },
     });
     if (!user) {
-      throw new ForbiddenException('Access denied');
+      throw new ForbiddenException('User does not exist');
     }
 
     const isMatchPassword = await argon.verify(

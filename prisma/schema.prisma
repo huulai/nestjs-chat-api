@@ -10,12 +10,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator nestgraphql {
+  provider = "node node_modules/prisma-nestjs-graphql"
+  output   = "../src/@generated"
+
+  purgeOutput             = true
+  combineScalarFilters    = false
+  emitSingle              = true
+  noAtomicOperations      = true
+  // field validator
+  fields_Validator_input  = true
+  fields_Validator_output = true
+  fields_Validator_model  = true
+  fields_Validator_from   = "class-validator"
+  // Args where|data nested validator
+  decorate_1_type         = "*Args"
+  decorate_1_field        = "@(data|where)"
+  decorate_1_name         = ValidateNested
+  decorate_1_from         = "class-validator"
+  decorate_1_arguments    = "[]"
+}
+
 model User {
-  id                 Int      @id @default(autoincrement())
+  id                 Int           @id @default(autoincrement())
   username           String
-  email              String   @unique
+  email              String        @unique
   hashedPassword     String
   hashedRefreshToken String?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @default(now())
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @default(now())
+  sender             Friend? @relation("sender")
+  receiver           Friend? @relation("receiver")
+}
+
+model Friend {
+  id         Int          @id @default(autoincrement())
+  sender     User         @relation("sender", fields: [senderId], references: [id])
+  senderId   Int          @unique
+  receiver   User         @relation("receiver", fields: [receiverId], references: [id])
+  receiverId Int          @unique
+  status     FriendStatus @default(PENDING)
+}
+
+enum FriendStatus {
+  ACCEPTED
+  PENDING
+  BLOCKED
 }

@@ -3,4 +3,4 @@ export type JwtPayload = {
   userId: number;
 };
 
-export type JwtPayloadWithRefreshToken = JwtPayload & { refreshToken: string };
+export type JwtPayloadWithRefreshToken = JwtPayload & { refreshtoken: string };

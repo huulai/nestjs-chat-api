@@ -1,6 +1,5 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { Auth } from './entities/auth.entity';
 import { SignUpInput } from './dto/signup.input';
 import { SignResponse } from './dto/sign.response';
 import { SignInInput } from './dto/signin.input';
@@ -8,11 +7,10 @@ import { LogoutResponse } from './dto/logout.response';
 import { Public } from './decorators/public.decorator';
 import { currentUserId } from './decorators/currentUserId.decorator';
 import { currentUser } from './decorators/currentUser.decorator';
-import { NewTokensResponse } from './dto/newTokens.response';
 import { UseGuards } from '@nestjs/common';
 import { RefreshTokenGuard } from './guards/refreshToken.guard';
 
-@Resolver(() => Auth)
+@Resolver()
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
@@ -28,6 +26,7 @@ export class AuthResolver {
     return this.authService.signin(signInInput);
   }
 
+  // @Public()
   @Query(() => String)
   hello() {
     return 'hello';
@@ -40,10 +39,10 @@ export class AuthResolver {
 
   @Public()
   @UseGuards(RefreshTokenGuard)
-  @Mutation(() => NewTokensResponse)
+  @Mutation(() => SignResponse)
   getNewTokens(
     @currentUserId() userId: number,
-    @currentUser('refreshToken') refreshToken: string,
+    @currentUser('refreshtoken') refreshToken: string,
   ) {
     return this.authService.getNewTokens(userId, refreshToken);
   }
