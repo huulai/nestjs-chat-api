@@ -9,6 +9,8 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessTokenGuard } from './auth/guards/accessToken.guard';
 import { FriendsModule } from './friends/friends.module';
+import { PubSubModule } from './pubSub/pubSub.module';
+import * as jwt from 'jsonwebtoken';
 
 @Module({
   imports: [
@@ -18,10 +20,25 @@ import { FriendsModule } from './friends/friends.module';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       installSubscriptionHandlers: true,
+      subscriptions: {
+        'subscriptions-transport-ws': {
+          onConnect: (connectionParams) => {
+            const { authorization } = connectionParams;
+            if (!authorization) throw new Error('authorization is not valid');
+            const token = authorization.split(' ')[1];
+            if (!token) {
+              throw new Error('Token is not valid');
+            }
+            const user = jwt.decode(token);
+            return { req: { headers: { user, authorization: authorization } } };
+          },
+        },
+      },
     }),
     AuthModule,
     UserModule,
     FriendsModule,
+    PubSubModule,
   ],
   controllers: [],
   providers: [

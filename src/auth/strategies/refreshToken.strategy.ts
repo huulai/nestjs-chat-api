@@ -24,7 +24,6 @@ export class RefreshTokenStrategy extends PassportStrategy(
       ?.replace('Bearer', '')
       .trim();
 
-    console.log(payload, 'payload!');
     return {
       ...payload,
       refreshtoken,

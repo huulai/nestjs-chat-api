@@ -16,6 +16,11 @@ type Friend {
   status: FriendStatus!
 }
 
+type FriendActionResponse {
+  action: String!
+  friend: Friend!
+}
+
 type FriendAvgAggregate {
   id: Float
   receiverId: Float
@@ -46,7 +51,6 @@ type FriendMinAggregate {
 
 enum FriendStatus {
   ACCEPTED
-  BLOCKED
   PENDING
 }
 
@@ -62,9 +66,9 @@ type LogoutResponse {
 
 type Mutation {
   addFriend(receiverEmail: String!): Friend!
+  deleteFriend(id: Int!): Friend!
   getNewTokens: SignResponse!
   logout(id: Int!): LogoutResponse!
-  removeFriend(id: Int!): Friend!
   signin(signInInput: SignInInput!): SignResponse!
   signup(signUpInput: SignUpInput!): SignResponse!
   updateFriend(id: Int!, status: String!): Friend!
@@ -91,6 +95,11 @@ input SignUpInput {
   email: String!
   password: String!
   username: String!
+}
+
+type Subscription {
+  friendAction: FriendActionResponse!
+  test: String!
 }
 
 type User {

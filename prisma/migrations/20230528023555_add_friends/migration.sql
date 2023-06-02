@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "FriendStatus" AS ENUM ('ACCEPTED', 'PENDING', 'BLOCKED');
+CREATE TYPE "FriendStatus" AS ENUM ('ACCEPTED', 'PENDING');
 
 -- CreateTable
 CREATE TABLE "Friend" (

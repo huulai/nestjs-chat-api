@@ -39,7 +39,6 @@ export enum QueryMode {
 export enum FriendStatus {
   ACCEPTED = 'ACCEPTED',
   PENDING = 'PENDING',
-  BLOCKED = 'BLOCKED',
 }
 
 export enum FriendScalarFieldEnum {

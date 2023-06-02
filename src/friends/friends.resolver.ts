@@ -2,10 +2,15 @@ import { userIdParams } from './../auth/decorators/userIdParams.decorator';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { FriendsService } from './friends.service';
 import { Friend, FriendStatus } from '../@generated';
+import { Inject } from '@nestjs/common';
+import { PubSub } from 'graphql-subscriptions';
 
 @Resolver(() => Friend)
 export class FriendsResolver {
-  constructor(private readonly friendsService: FriendsService) {}
+  constructor(
+    private readonly friendsService: FriendsService,
+    @Inject('PUB_SUB') private pubSub: PubSub,
+  ) {}
 
   @Mutation(() => Friend, { name: 'addFriend' })
   createFriend(
@@ -33,7 +38,7 @@ export class FriendsResolver {
   }
 
   @Mutation(() => Friend)
-  removeFriend(@Args('id', { type: () => Int }) id: number) {
+  deleteFriend(@Args('id', { type: () => Int }) id: number) {
     return this.friendsService.remove(id);
   }
 }
