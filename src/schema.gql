@@ -72,6 +72,7 @@ type Mutation {
   signin(signInInput: SignInInput!): SignResponse!
   signup(signUpInput: SignUpInput!): SignResponse!
   updateFriend(id: Int!, status: String!): Friend!
+  updateUserInfo(updateUserInfoInput: UpdateUserInfoInput!): User!
 }
 
 type Query {
@@ -102,53 +103,87 @@ type Subscription {
   test: String!
 }
 
+input UpdateUserInfoInput {
+  aboutMe: String
+  age: Float
+  avatar: String
+  interests: [String!]
+  occupation: String
+  sex: String
+  username: String
+}
+
 type User {
+  aboutMe: String!
+  age: Int!
+  avatar: String!
   createdAt: DateTime!
   email: String!
   hashedPassword: String!
   hashedRefreshToken: String
   id: ID!
+  interests: [String!]
+  occupation: String!
   receiver: Friend
   sender: Friend
+  sex: String!
   updatedAt: DateTime!
   username: String!
 }
 
 type UserAvgAggregate {
+  age: Float
   id: Float
 }
 
 type UserCountAggregate {
   _all: Int!
+  aboutMe: Int!
+  age: Int!
+  avatar: Int!
   createdAt: Int!
   email: Int!
   hashedPassword: Int!
   hashedRefreshToken: Int!
   id: Int!
+  interests: Int!
+  occupation: Int!
+  sex: Int!
   updatedAt: Int!
   username: Int!
 }
 
 type UserMaxAggregate {
+  aboutMe: String
+  age: Int
+  avatar: String
   createdAt: DateTime
   email: String
   hashedPassword: String
   hashedRefreshToken: String
   id: Int
+  occupation: String
+  sex: String
   updatedAt: DateTime
   username: String
 }
 
 type UserMinAggregate {
+  aboutMe: String
+  age: Int
+  avatar: String
   createdAt: DateTime
   email: String
   hashedPassword: String
   hashedRefreshToken: String
   id: Int
+  occupation: String
+  sex: String
   updatedAt: DateTime
   username: String
 }
 
 type UserSumAggregate {
+  age: Int
   id: Int
 }
